@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fire TV Clean-Up Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: one calm reading column, a sticky progress strip, numbered step cards tagged TV or PC, with mock screens where he has to recognise something. */
+:root {
+  --bg: #F2F4F7;
+  --surface: #FFFFFF;
+  --ink: #142030;
+  --muted: #5A6778;
+  --line: #D8DEE6;
+  --accent: #A9520F;
+  --accent-soft: #FBEBDC;
+  --on-accent: #FFFFFF;
+  --tv-chip: #1D3A5C;
+  --tv-chip-bg: #E3ECF6;
+  --pc-chip: #3B3F8F;
+  --pc-chip-bg: #E8E8F8;
+  --ok: #1E7A4C;
+  --ok-soft: #E2F3EA;
+  --warn: #8A5A00;
+  --warn-soft: #FFF3D6;
+  --screen: #0D141D;
+  --screen-ink: #E6EDF5;
+  --screen-dim: #8C9AAB;
+  --screen-hi: #F2A55A;
+  --win-blue: #0B5CAD;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --step: 1rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E141C; --surface: #161F2A; --ink: #E6ECF3; --muted: #9AA7B6; --line: #283544;
+    --accent: #F2A55A; --accent-soft: #33261A; --on-accent: #1A1106;
+    --tv-chip: #A9CBF0; --tv-chip-bg: #1B2B3E; --pc-chip: #C3C5F7; --pc-chip-bg: #24264A;
+    --ok: #63C795; --ok-soft: #15301F; --warn: #F0C46A; --warn-soft: #30270F;
+    --screen: #080C12; --screen-ink: #E6EDF5; --screen-dim: #8C9AAB; --screen-hi: #F2A55A; --win-blue: #3D8BD9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E141C; --surface: #161F2A; --ink: #E6ECF3; --muted: #9AA7B6; --line: #283544;
+  --accent: #F2A55A; --accent-soft: #33261A; --on-accent: #1A1106;
+  --tv-chip: #A9CBF0; --tv-chip-bg: #1B2B3E; --pc-chip: #C3C5F7; --pc-chip-bg: #24264A;
+  --ok: #63C795; --ok-soft: #15301F; --warn: #F0C46A; --warn-soft: #30270F;
+  --screen: #080C12; --screen-ink: #E6EDF5; --screen-dim: #8C9AAB; --screen-hi: #F2A55A; --win-blue: #3D8BD9;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 720px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.1rem); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 1.22rem; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+
+/* Header */
+.top { padding-block: 48px 28px; display: grid; gap: 16px; }
+.lede { font-size: 1.12rem; max-width: 60ch; }
+.needs { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 4px 0 0; list-style: none; }
+.needs li { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 0.95rem; }
+
+/* Progress strip */
+.progress {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); padding-block: 10px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.progress .count { font-weight: 700; font-variant-numeric: tabular-nums; }
+.bar { flex: 1 1 160px; height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.bar span { display: block; height: 100%; width: 0; background: var(--ok); transition: width .3s ease; }
+.linkish { background: none; border: 0; color: var(--muted); font: inherit; font-size: 0.9rem; text-decoration: underline; cursor: pointer; padding: 4px; }
+
+/* Sections and steps */
+main { display: grid; gap: 40px; padding-top: 32px; }
+.part { display: grid; gap: 16px; }
+.part > header { display: grid; gap: 6px; }
+.step {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 20px; display: grid; gap: 14px; min-width: 0;
+}
+.step.is-done { border-color: var(--ok); }
+.step-head { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; }
+.num {
+  width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
+  background: var(--accent); color: var(--on-accent); font-variant-numeric: tabular-nums;
+}
+.step.is-done .num { background: var(--ok); }
+.step-title { display: grid; gap: 6px; min-width: 0; }
+.where { justify-self: start; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border-radius: 6px; }
+.where.tv { color: var(--tv-chip); background: var(--tv-chip-bg); }
+.where.pc { color: var(--pc-chip); background: var(--pc-chip-bg); }
+.done { display: inline-flex; align-items: center; gap: 8px; font-size: 0.92rem; font-weight: 600; color: var(--muted); cursor: pointer; white-space: nowrap; padding: 4px 2px; }
+.done input { width: 22px; height: 22px; accent-color: var(--ok); cursor: pointer; }
+.step ol, .step ul { margin: 0; padding-left: 1.4em; display: grid; gap: 8px; }
+.step li::marker { color: var(--muted); font-weight: 700; }
+.note { font-size: 0.95rem; color: var(--muted); }
+.tip, .warn, .good { border-radius: 10px; padding: 12px 14px; font-size: 0.97rem; display: grid; gap: 4px; }
+.tip { background: var(--accent-soft); }
+.warn { background: var(--warn-soft); color: var(--ink); }
+.warn strong:first-child { color: var(--warn); }
+.good { background: var(--ok-soft); }
+
+/* Inline symbols: TV menu paths, remote buttons, keyboard keys */
+.path { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; vertical-align: baseline; }
+.path span { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0 7px; font-weight: 600; font-size: 0.93em; white-space: nowrap; }
+.path span + span::before { content: "\203A"; margin: 0 6px 0 -2px; color: var(--muted); font-weight: 400; }
+.path span + span { margin-left: 0; }
+.rk { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 0 9px; font-size: 0.9em; font-weight: 600; white-space: nowrap; }
+.rk b { font-size: 1.05em; color: var(--accent); }
+kbd { font-family: var(--font-mono); font-size: 0.88em; font-weight: 600; background: var(--surface); border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 6px; padding: 1px 7px; white-space: nowrap; }
+code { font-family: var(--font-mono); font-size: 0.9em; background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; overflow-wrap: anywhere; }
+
+/* The IP notepad */
+.ipbox { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: var(--bg); border: 1px dashed var(--line); border-radius: 10px; padding: 12px 14px; }
+.ipbox label { font-weight: 600; }
+.ipbox input { font-family: var(--font-mono); font-size: 1.15rem; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); width: 12ch; min-width: 0; flex: 0 1 auto; }
+.ip-slot { font-family: var(--font-mono); font-weight: 600; background: var(--accent-soft); border-radius: 5px; padding: 0 6px; }
+
+/* Download button */
+.btn { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: var(--on-accent); text-decoration: none; font-weight: 700; padding: 12px 20px; border-radius: 10px; font-size: 1.05rem; justify-self: start; }
+.btn:hover { filter: brightness(1.08); }
+
+/* Mock screens */
+.mock { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); min-width: 0; }
+.mock figcaption { font-size: 0.85rem; color: var(--muted); padding: 8px 12px; background: var(--bg); border-top: 1px solid var(--line); }
+figure { margin: 0; }
+.tvscreen { background: var(--screen); color: var(--screen-ink); padding: 28px 16px; display: grid; place-items: center; }
+.dialog { width: min(100%, 380px); background: #1C2735; border-radius: 10px; padding: 18px; display: grid; gap: 12px; font-size: 0.95rem; }
+.dialog h4 { margin: 0; font-family: var(--font-body); font-size: 1.05rem; }
+.dialog .dim { color: var(--screen-dim); font-size: 0.82rem; overflow-wrap: anywhere; }
+.dialog .check { display: flex; gap: 10px; align-items: center; outline: 2px solid var(--screen-hi); border-radius: 6px; padding: 6px 8px; }
+.dialog .box { width: 18px; height: 18px; border-radius: 4px; background: var(--screen-hi); color: #1A1106; display: grid; place-items: center; font-size: 13px; font-weight: 800; flex: none; }
+.dialog .btns { display: flex; justify-content: flex-end; gap: 18px; font-weight: 700; letter-spacing: 0.04em; }
+.dialog .btns .on { color: var(--screen-hi); }
+.console { background: #0C0C0C; color: #CCCCCC; font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.5; padding: 14px 16px; margin: 0; overflow-x: auto; white-space: pre; }
+.console .c { color: #61D6D6; } .console .g { color: #16C60C; } .console .y { color: #F9F1A5; } .console .w { color: #F2F2F2; }
+.winwarn { background: var(--win-blue); color: #FFFFFF; padding: 22px 20px; display: grid; gap: 10px; font-family: "Segoe UI", var(--font-body); }
+.winwarn h4 { margin: 0; font-size: 1.35rem; font-weight: 400; }
+.winwarn p { font-size: 0.9rem; opacity: 0.95; }
+.winwarn .more { text-decoration: underline; font-size: 0.9rem; outline: 2px dashed #FFFFFF; outline-offset: 3px; justify-self: start; }
+.winwarn .row { display: flex; justify-content: flex-end; gap: 10px; }
+.winwarn .wbtn { border: 2px solid #FFFFFF; padding: 4px 16px; font-size: 0.9rem; }
+.winwarn .wbtn.hi { background: #FFFFFF; color: var(--win-blue); font-weight: 600; outline: 2px dashed #FFFFFF; outline-offset: 3px; }
+
+/* Lists of what changes */
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.split > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.split ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 0.97rem; }
+
+/* Troubleshooting */
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+details + details { margin-top: 10px; }
+summary { cursor: pointer; padding: 14px 16px; font-weight: 700; list-style-position: outside; margin-left: 16px; }
+details > div { padding: 0 16px 16px; display: grid; gap: 10px; }
+details ol, details ul { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; }
+
+footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.92rem; display: grid; gap: 6px; }
+
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .step { padding: 16px; }
+  .step-head { grid-template-columns: auto 1fr; }
+  .step-head .done { grid-column: 1 / -1; justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) { .bar span { transition: none; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Windows PC &middot; about 30 minutes &middot; no tech skills needed</p>
+    <h1>Fire TV Clean-Up</h1>
+    <p class="lede">Switch off Amazon's ads and tracking, and swap the cluttered home screen for a clean, fast one. Do the steps in order and tick each one when it's done. Nothing here can break your TV, and every change can be undone.</p>
+    <ul class="needs" aria-label="What you need">
+      <li>Your Fire TV and its remote</li>
+      <li>A Windows PC on the same Wi-Fi as the TV</li>
+      <li>About 30 minutes</li>
+    </ul>
+  </header>
+
+  <div class="progress" role="status" aria-live="polite">
+    <span class="count" id="count">0 of 11 steps done</span>
+    <div class="bar" aria-hidden="true"><span id="bar"></span></div>
+    <button class="linkish" id="reset" type="button">Start over</button>
+  </div>
+
+  <main>
+    <!-- Before you start -->
+    <section class="part" aria-labelledby="before">
+      <header>
+        <p class="eyebrow">Before you start</p>
+        <h2 id="before">Check your TV can do this</h2>
+      </header>
+      <div class="step">
+        <ol>
+          <li>On the TV, press <span class="rk"><b>&#8962;</b> Home</span>, then go to <span class="path"><span>Settings</span><span>My Fire TV</span><span>About</span></span>.<br><span class="note">On some TVs, "My Fire TV" is called "Device &amp; Software".</span></li>
+          <li>Find the line about the TV's software.</li>
+        </ol>
+        <div class="good"><strong>It says "Fire OS" (like Fire OS 7 or 8):</strong> great, carry on.</div>
+        <div class="warn"><strong>It says "Vega OS":</strong> stop here. Amazon locked these newer models, and this kit can't change them.</div>
+      </div>
+      <div class="split">
+        <div>
+          <h3>What gets switched off</h3>
+          <ul>
+            <li>Amazon's ads and the ad screensaver</li>
+            <li>Tracking of what you watch</li>
+            <li>Shopping, pop-ups and surveys</li>
+            <li>Extras like Amazon Photos, Amazon Music and the Silk browser</li>
+            <li>Amazon's home screen (replaced by Projectivy)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>What keeps working</h3>
+          <ul>
+            <li>Netflix, Hulu, Disney+, YouTube and all your apps</li>
+            <li>Prime Video and the Appstore</li>
+            <li>Alexa voice on the remote</li>
+            <li>Live TV, HDMI inputs and AirPlay</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 1: TV -->
+    <section class="part" aria-labelledby="p1">
+      <header>
+        <p class="eyebrow">Part 1</p>
+        <h2 id="p1">Unlock the TV</h2>
+      </header>
+
+      <article class="step" id="s1">
+        <div class="step-head">
+          <span class="num">1</span>
+          <div class="step-title"><span class="where tv">On the TV</span><h3>Turn on developer mode</h3></div>
+          <label class="done"><input type="checkbox" id="done-1" data-step> Done</label>
+        </div>
+        <ol>
+          <li>Go to <span class="path"><span>Settings</span><span>My Fire TV</span><span>About</span></span>.</li>
+          <li>Highlight the <strong>very first line</strong> (it shows your TV's name).</li>
+          <li>Press the middle <span class="rk"><b>&#9673;</b> Select</span> button <strong>7 times</strong>, quickly.</li>
+          <li>A message says <em>"You are now a developer"</em>. (If it says you already are one, that's fine too.)</li>
+        </ol>
+      </article>
+
+      <article class="step" id="s2">
+        <div class="step-head">
+          <span class="num">2</span>
+          <div class="step-title"><span class="where tv">On the TV</span><h3>Turn on ADB debugging</h3></div>
+          <label class="done"><input type="checkbox" id="done-2" data-step> Done</label>
+        </div>
+        <ol>
+          <li>Press <span class="rk"><b>&#8617;</b> Back</span> once to get to the <strong>My Fire TV</strong> list.</li>
+          <li>Open <span class="path"><span>Developer Options</span></span>. It's new, near the bottom.</li>
+          <li>Set <strong>ADB debugging</strong> to <strong>ON</strong>. If a warning pops up, choose <strong>Turn On</strong>.</li>
+        </ol>
+        <p class="note">ADB debugging lets your PC send settings to the TV. You'll approve your PC on the TV screen in Step 7, so no other device can use it without you knowing.</p>
+      </article>
+
+      <article class="step" id="s3">
+        <div class="step-head">
+          <span class="num">3</span>
+          <div class="step-title"><span class="where tv">On the TV</span><h3>Write down the TV's IP address</h3></div>
+          <label class="done"><input type="checkbox" id="done-3" data-step> Done</label>
+        </div>
+        <ol>
+          <li>Go to <span class="path"><span>Settings</span><span>My Fire TV</span><span>About</span><span>Network</span></span>.</li>
+          <li>Find <strong>IP Address</strong>. It's four numbers with dots, like <code>192.168.1.57</code>.</li>
+        </ol>
+        <div class="ipbox">
+          <label for="tv-ip">Type it here so you have it later:</label>
+          <input id="tv-ip" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="192.168.1.57">
+        </div>
+      </article>
+    </section>
+
+    <!-- Part 2: PC -->
+    <section class="part" aria-labelledby="p2">
+      <header>
+        <p class="eyebrow">Part 2</p>
+        <h2 id="p2">Get the kit onto your PC</h2>
+        <p class="note">The kit lives on GitHub, a website people use to share code. You don't need an account, you just download it.</p>
+      </header>
+
+      <article class="step" id="s4">
+        <div class="step-head">
+          <span class="num">4</span>
+          <div class="step-title"><span class="where pc">On the PC</span><h3>Download the kit</h3></div>
+          <label class="done"><input type="checkbox" id="done-4" data-step> Done</label>
+        </div>
+        <a class="btn" href="https://github.com/Sebixmc/BespokeTVOS/archive/refs/heads/main.zip">Download the kit (ZIP file)</a>
+        <ol>
+          <li>Click the button above. It saves <code>BespokeTVOS-main.zip</code> to your <strong>Downloads</strong> folder.</li>
+        </ol>
+        <p class="note">Button not working? Go to <a href="https://github.com/Sebixmc/BespokeTVOS">github.com/Sebixmc/BespokeTVOS</a>, click the green <strong>Code</strong> button, then <strong>Download ZIP</strong>.</p>
+      </article>
+
+      <article class="step" id="s5">
+        <div class="step-head">
+          <span class="num">5</span>
+          <div class="step-title"><span class="where pc">On the PC</span><h3>Unblock it, then unzip it</h3></div>
+          <label class="done"><input type="checkbox" id="done-5" data-step> Done</label>
+        </div>
+        <ol>
+          <li>Open your <strong>Downloads</strong> folder.</li>
+          <li><strong>Right-click</strong> <code>BespokeTVOS-main.zip</code> and choose <strong>Properties</strong>.</li>
+          <li>At the bottom of the General tab, tick <strong>Unblock</strong>, then click <strong>OK</strong>. (No Unblock box? Skip this.)</li>
+          <li><strong>Right-click</strong> the ZIP again and choose <strong>Extract All&hellip;</strong>, then click <strong>Extract</strong>.</li>
+          <li>A new folder opens. Leave it open for the next step.</li>
+        </ol>
+        <div class="tip"><strong>Why unblock?</strong> Windows is suspicious of anything downloaded. Unblocking first means fewer warning pop-ups later.</div>
+      </article>
+
+      <article class="step" id="s6">
+        <div class="step-head">
+          <span class="num">6</span>
+          <div class="step-title"><span class="where pc">On the PC</span><h3>Start the kit</h3></div>
+          <label class="done"><input type="checkbox" id="done-6" data-step> Done</label>
+        </div>
+        <ol>
+          <li>In the folder that opened, open <strong>BespokeTVOS-main</strong>. Sometimes there's a folder inside a folder with the same name, so open that one too.</li>
+          <li>Double-click <strong>START-HERE</strong> (it may show as <code>START-HERE.bat</code>, with a gear icon).</li>
+          <li>If a blue <strong>"Windows protected your PC"</strong> box appears, click <strong>More info</strong>, then <strong>Run anyway</strong>.</li>
+          <li>If a box asks <strong>"Do you want to run this file?"</strong>, click <strong>Run</strong>.</li>
+        </ol>
+        <figure class="mock">
+          <div class="winwarn" aria-hidden="true">
+            <h4>Windows protected your PC</h4>
+            <p>Microsoft Defender SmartScreen prevented an unrecognized app from starting.</p>
+            <span class="more">More info</span>
+            <div class="row"><span class="wbtn hi">Run anyway</span><span class="wbtn">Don't run</span></div>
+          </div>
+          <figcaption>Click <strong>More info</strong> first. The <strong>Run anyway</strong> button only appears after that.</figcaption>
+        </figure>
+        <p>A black window opens. The first time, it says <em>"downloading Google's official Android tools"</em>. Give it a minute. Then you'll see this menu:</p>
+        <figure class="mock">
+<pre class="console" aria-label="The kit's menu"><span class="c">=============================================
+          FIRE TV CLEAN-UP KIT
+=============================================</span>
+<span class="y">  Not connected to a TV yet (start with 1)</span>
+
+  1) Connect to my TV
+<span class="w">  2) DO EVERYTHING (recommended) - runs Steps 1 to 4 in order</span>
+  3) Step 1: Check my TV and save a backup
+  4) Step 2: Turn off Amazon ads, tracking and junk apps
+  5) Step 3: Install the Projectivy home screen
+  6) Step 4: Block Amazon tracking servers
+  7) Show what's changed
+  8) UNDO everything
+  9) Switch off just the tracking block (if an app has trouble)
+  Q) Quit
+
+Type a number and press Enter: _</pre>
+          <figcaption>The kit's menu. You pick things by typing a number and pressing Enter.</figcaption>
+        </figure>
+        <div class="tip"><strong>Windows Firewall pop-up?</strong> If Windows asks whether to allow "adb", tick <strong>Private networks</strong> and click <strong>Allow access</strong>.</div>
+      </article>
+    </section>
+
+    <!-- Part 3: Connect -->
+    <section class="part" aria-labelledby="p3">
+      <header>
+        <p class="eyebrow">Part 3</p>
+        <h2 id="p3">Connect the PC to the TV</h2>
+      </header>
+
+      <article class="step" id="s7">
+        <div class="step-head">
+          <span class="num">7</span>
+          <div class="step-title"><span class="where pc">PC, then TV</span><h3>Connect and say yes on the TV</h3></div>
+          <label class="done"><input type="checkbox" id="done-7" data-step> Done</label>
+        </div>
+        <ol>
+          <li>In the black window, type <kbd>1</kbd> and press <kbd>Enter</kbd>.</li>
+          <li>Type your TV's IP address, <span class="ip-slot" data-ip>from Step 3</span>, and press <kbd>Enter</kbd>.</li>
+          <li><strong>Look at the TV.</strong> A box appears asking <em>"Allow USB debugging?"</em></li>
+          <li>With the remote, move down to <strong>Always allow from this computer</strong> and press <span class="rk"><b>&#9673;</b> Select</span> to tick it.</li>
+          <li>Move to <strong>OK</strong> and press <span class="rk"><b>&#9673;</b> Select</span>.</li>
+          <li>The PC window says <strong>Connected to your TV!</strong> in green. Press <kbd>Enter</kbd> to go back to the menu.</li>
+        </ol>
+        <figure class="mock">
+          <div class="tvscreen" aria-hidden="true">
+            <div class="dialog">
+              <h4>Allow USB debugging?</h4>
+              <p class="dim">The computer's RSA key fingerprint is: 3A:9F:&hellip;:C2</p>
+              <div class="check"><span class="box">&#10003;</span> Always allow from this computer</div>
+              <div class="btns"><span>CANCEL</span><span class="on">OK</span></div>
+            </div>
+          </div>
+          <figcaption>What the TV shows. Tick the box first, then OK. (It says "USB" even though you're on Wi-Fi. That's normal.)</figcaption>
+        </figure>
+      </article>
+    </section>
+
+    <!-- Part 4: Clean up -->
+    <section class="part" aria-labelledby="p4">
+      <header>
+        <p class="eyebrow">Part 4</p>
+        <h2 id="p4">Clean it up</h2>
+      </header>
+
+      <article class="step" id="s8">
+        <div class="step-head">
+          <span class="num">8</span>
+          <div class="step-title"><span class="where pc">On the PC</span><h3>Run "Do everything"</h3></div>
+          <label class="done"><input type="checkbox" id="done-8" data-step> Done</label>
+        </div>
+        <p>Type <kbd>2</kbd> and press <kbd>Enter</kbd>. The kit works through four steps and stops between each one so you can read it. Press <kbd>Enter</kbd> to move on.</p>
+        <ol>
+          <li><strong>Check and backup.</strong> It shows your TV model and saves a list of your apps in a <code>my-tv</code> folder. If it says <em>STOP</em>, your TV runs Vega OS (see "Before you start").</li>
+          <li><strong>Amazon junk.</strong> It asks <em>"Go ahead? (y/n)"</em>. Type <kbd>y</kbd> and press <kbd>Enter</kbd>. A list scrolls by with <strong>OK</strong> next to each item. A few lines saying <em>"not on this TV"</em> are normal.</li>
+          <li><strong>New home screen.</strong> It downloads and installs Projectivy. This takes about a minute. Your TV switches to Projectivy when it's done. <strong>Go to Step 9 now</strong>, then come back.</li>
+          <li><strong>Tracking block.</strong> Type <kbd>y</kbd> and press <kbd>Enter</kbd>. You'll see a few lines saying <strong>BLOCKED</strong> and a few saying <strong>working</strong>. That's what you want.</li>
+        </ol>
+        <div class="good"><strong>When it says "ALL DONE!"</strong> you can close the black window.</div>
+      </article>
+
+      <article class="step" id="s9">
+        <div class="step-head">
+          <span class="num">9</span>
+          <div class="step-title"><span class="where tv">On the TV</span><h3>Make Projectivy your home screen</h3></div>
+          <label class="done"><input type="checkbox" id="done-9" data-step> Done</label>
+        </div>
+        <ol>
+          <li>Projectivy is on the TV screen. Click through its welcome screens with <span class="rk"><b>&#9673;</b> Select</span>.</li>
+          <li>Open Projectivy's <strong>Settings</strong> (the gear icon at the top right of its home screen).</li>
+          <li>Go to <strong>General</strong> and turn <strong>Override current launcher</strong> ON.</li>
+          <li>Press <span class="rk"><b>&#8962;</b> Home</span> on the remote. You should land back in Projectivy, not Amazon's screen.</li>
+          <li>Go back to the PC and press <kbd>Enter</kbd> to run the last step.</li>
+        </ol>
+        <p class="note">You might see Amazon's screen flash for a moment when you press Home. That's normal.</p>
+      </article>
+    </section>
+
+    <!-- Part 5: Finish -->
+    <section class="part" aria-labelledby="p5">
+      <header>
+        <p class="eyebrow">Part 5</p>
+        <h2 id="p5">Check it and make it yours</h2>
+      </header>
+
+      <article class="step" id="s10">
+        <div class="step-head">
+          <span class="num">10</span>
+          <div class="step-title"><span class="where tv">On the TV</span><h3>Restart and test</h3></div>
+          <label class="done"><input type="checkbox" id="done-10" data-step> Done</label>
+        </div>
+        <ol>
+          <li>Go to <span class="path"><span>Settings</span><span>My Fire TV</span><span>Restart</span></span>.</li>
+          <li>When it's back, press <span class="rk"><b>&#8962;</b> Home</span>. You should see Projectivy.</li>
+          <li>Open two or three of your apps (Netflix, Prime Video, YouTube) and play something in each.</li>
+        </ol>
+        <p class="note">After a restart, the TV quietly switches ADB debugging off. That only matters if you use the kit again. See "It worked before, but now it won't connect" below.</p>
+      </article>
+
+      <article class="step" id="s11">
+        <div class="step-head">
+          <span class="num">11</span>
+          <div class="step-title"><span class="where tv">On the TV</span><h3>Arrange your home screen</h3></div>
+          <label class="done"><input type="checkbox" id="done-11" data-step> Done</label>
+        </div>
+        <ul>
+          <li><strong>Move, hide or rename an app:</strong> highlight it and press <span class="rk"><b>&#8801;</b> Menu</span> (three lines).</li>
+          <li><strong>Make your own rows</strong> (like "Shows" or "Kids"): press <span class="rk"><b>&#8801;</b> Menu</span> on a row.</li>
+          <li><strong>HDMI inputs</strong> (game console, cable box): add input shortcuts so they sit next to your apps.</li>
+          <li><strong>Wallpaper and icons:</strong> in Projectivy's Settings. Some extras need Projectivy's paid version.</li>
+        </ul>
+        <p class="note">An <strong>AirPlay</strong> tile that says "Unable to start app" is normal. That tile only opens AirPlay's settings, and Amazon doesn't let other home screens open it. AirPlay from an iPhone still works, so just hide the tile.</p>
+      </article>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section class="part" aria-labelledby="help">
+      <header>
+        <p class="eyebrow">If something goes wrong</p>
+        <h2 id="help">Fixes for common problems</h2>
+      </header>
+      <div>
+        <details>
+          <summary>"Can't reach the TV"</summary>
+          <div>
+            <ol>
+              <li>Make sure the TV is on (not asleep).</li>
+              <li>Check <span class="path"><span>Developer Options</span><span>ADB debugging</span></span> is ON.</li>
+              <li>Check the IP address again under <span class="path"><span>About</span><span>Network</span></span>. It can change.</li>
+              <li>Make sure the PC and TV are on the <strong>same</strong> Wi-Fi network.</li>
+              <li>In the black window, type <kbd>1</kbd> and try again.</li>
+            </ol>
+          </div>
+        </details>
+        <details>
+          <summary>It worked before, but now it won't connect</summary>
+          <div>
+            <p>The TV switches ADB debugging off after a restart.</p>
+            <ol>
+              <li>On the TV: <span class="path"><span>Developer Options</span><span>ADB debugging</span></span>. Switch it <strong>OFF</strong>, then <strong>ON</strong> again.</li>
+              <li>On the PC: type <kbd>1</kbd> and connect again. You won't need to approve it on the TV a second time.</li>
+            </ol>
+          </div>
+        </details>
+        <details>
+          <summary>The "Allow USB debugging?" box never appeared</summary>
+          <div>
+            <ol>
+              <li>Wake the TV up and stay on any screen.</li>
+              <li>Switch ADB debugging OFF and ON again.</li>
+              <li>Type <kbd>1</kbd> in the black window. The box usually appears within a few seconds.</li>
+            </ol>
+          </div>
+        </details>
+        <details>
+          <summary>Double-clicking START-HERE does nothing, or the window closes instantly</summary>
+          <div>
+            <ul>
+              <li>Make sure you did <strong>Extract All</strong> in Step 5. Running it from inside the ZIP doesn't work.</li>
+              <li>Make sure you're double-clicking START-HERE inside the extracted folder, not in the ZIP.</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>The Home button still goes to Amazon's screen</summary>
+          <div>
+            <ol>
+              <li>In Projectivy's Settings, check <strong>General &rsaquo; Override current launcher</strong> is ON.</li>
+              <li>Still not working? In the black window, type <kbd>5</kbd> to run the home screen step again.</li>
+              <li>Restart the TV.</li>
+            </ol>
+          </div>
+        </details>
+        <details>
+          <summary>An app stopped working or won't play</summary>
+          <div>
+            <p>The tracking block is the most likely cause, especially for free apps with ads.</p>
+            <ol>
+              <li>Open the kit and type <kbd>9</kbd> to switch off just the tracking block. (Won't connect? See "It worked before, but now it won't connect" above.)</li>
+              <li>Try the app again. If it's still broken, type <kbd>8</kbd> to undo everything.</li>
+            </ol>
+          </div>
+        </details>
+        <details>
+          <summary>It says "STOP: this TV is not running Fire OS"</summary>
+          <div><p>Your TV runs Amazon's newer Vega OS, which is locked down. The kit has changed nothing. You can still turn off some ads yourself: <span class="path"><span>Settings</span><span>Preferences</span><span>Featured Content</span></span>, then switch off video and audio autoplay.</p></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Undo -->
+    <section class="part" aria-labelledby="undo">
+      <header>
+        <p class="eyebrow">Changed your mind?</p>
+        <h2 id="undo">Undo everything</h2>
+      </header>
+      <div class="step">
+        <ol>
+          <li>Turn on ADB debugging on the TV if it's off (switch it OFF and ON).</li>
+          <li>Double-click <strong>START-HERE</strong> again, and type <kbd>1</kbd> to connect if it isn't already.</li>
+          <li>Type <kbd>8</kbd> and press <kbd>Enter</kbd>, then <kbd>y</kbd> and <kbd>Enter</kbd>.</li>
+          <li>It asks if you also want to remove Projectivy. Type <kbd>y</kbd> for Amazon's home screen back, or <kbd>n</kbd> to keep Projectivy.</li>
+          <li>Restart the TV. Everything is back the way Amazon set it up.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Tested on an Insignia 50" F50 Fire TV running Fire OS 8.1.8.</p>
+    <p>Kit: <a href="https://github.com/Sebixmc/BespokeTVOS">github.com/Sebixmc/BespokeTVOS</a> &middot; Home screen: <a href="https://github.com/spocky/miproja1">Projectivy Launcher</a> by spocky &middot; Tracking block: <a href="https://adguard-dns.io/">AdGuard DNS</a></p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var KEY = 'firetv-guide-v1';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { state = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[data-step]'));
+  var countEl = document.getElementById('count');
+  var barEl = document.getElementById('bar');
+  var ipInput = document.getElementById('tv-ip');
+  var slots = Array.prototype.slice.call(document.querySelectorAll('[data-ip]'));
+
+  function render() {
+    var done = 0;
+    boxes.forEach(function (b) {
+      b.checked = !!state[b.id];
+      var card = b.closest('.step');
+      if (card) card.classList.toggle('is-done', b.checked);
+      if (b.checked) done++;
+    });
+    countEl.textContent = done + ' of ' + boxes.length + ' steps done';
+    barEl.style.width = (boxes.length ? (done / boxes.length) * 100 : 0) + '%';
+    var ip = (state.ip || '').trim();
+    if (ipInput.value !== (state.ip || '')) ipInput.value = state.ip || '';
+    slots.forEach(function (s) { s.textContent = ip || 'from Step 3'; });
+  }
+
+  boxes.forEach(function (b) {
+    b.addEventListener('change', function () { state[b.id] = b.checked; save(); render(); });
+  });
+  ipInput.addEventListener('input', function () { state.ip = ipInput.value; save(); render(); });
+  document.getElementById('reset').addEventListener('click', function () {
+    var ip = state.ip; state = { ip: ip }; save(); render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>

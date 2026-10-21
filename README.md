@@ -1,5 +1,9 @@
 # Fire TV Clean-Up Kit
 
+## 👉 [Open the step-by-step guide](https://sebixmc.github.io/BespokeTVOS/)
+
+Start here. It's also in the download as **GUIDE.html**: double-click it to open it in your browser.
+
 Makes an Amazon Fire TV (a Fire TV stick, Cube or smart TV running **Fire OS**) faster and quieter:
 
 - **Turns off Amazon's ads, tracking and junk apps.** Nothing is deleted, and it can all be undone.
