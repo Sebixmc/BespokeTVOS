@@ -1,0 +1,55 @@
+# Packages BespokeTVOS switches off with `pm disable-user`. One per line; '#' starts a comment.
+# Chosen to be safe: Prime Video, the Appstore, Alexa, Live TV, AirPlay and HDMI inputs keep working.
+
+# Ads and tracking
+com.amazon.tv.acr
+com.amazon.hybridadidservice
+com.amazon.perfc
+com.amazon.perfcollection
+com.amazon.device.telemetry.emitter
+com.amazon.wirelessmetrics.service
+
+# Optional Amazon apps
+com.amazon.bueller.photos
+com.amazon.bueller.music
+com.amazon.minitv.android.app
+com.amazon.gamehub
+com.amazon.tv.alexaalerts
+com.amazon.tv.alexanotifications
+com.amazon.audiohome
+com.amazon.cloud9
+com.amazon.smarthomemapviewapp
+com.amazon.whisperplay.service.install   # AirPlay doesn't use it (it uses whisperlink.core)
+
+# Shopping
+com.amazon.shoptv.client
+
+# Screensaver and on-screen extras
+com.amazon.ftv.screensaver
+com.amazon.sneakpeek
+com.amazon.tv.notificationcenter
+com.amazon.tv.releasenotes
+com.amazon.tmm.tutorial
+
+# Background services
+com.amazon.logan
+com.amazon.fireos.cirruscloud
+com.amazon.ods.kindleconnect
+com.amazon.tahoe
+com.amazon.aria
+com.amazon.hedwig
+com.amazon.ceviche
+com.amazon.wifilocker
+com.amazon.spiderpork
+com.amazon.ssm
+com.amazon.ssmsys
+com.amazon.tv.easyupgrade
+com.amazon.dpcclient
+com.amazon.sharingservice.android.client.proxy
+com.amazon.privacypassservice
+com.amazon.tv.legal.notices
+
+# Deliberately left on:
+#   Amazon Video group (prism, dp.logger, livedeviceservice, rtcsessioncontroller, client.metrics.api): Prime Video
+#   com.amazon.firebat (Prime Video), com.amazon.venezia (Appstore and app updates)
+#   com.amazon.tv.livetv, com.amazon.tv.support, com.amazon.tv.turnstile, com.amazon.storm.lightning.tutorial

@@ -1,0 +1,6 @@
+# Personal notes about one specific TV
+device/
+# Created on the user's computer when the kit runs
+my-tv/
+tools/
+.DS_Store
